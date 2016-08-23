@@ -22,10 +22,12 @@ import java.util.List;
 public class TransactionsListAdapter extends RecyclerView.Adapter<TransactionsListAdapter.ViewHolder> {
     private static List<Transaction> productEntries;
     private static Context context;
+    private AdapterInterface clickListener;
 
-    public TransactionsListAdapter(List<Transaction> Transaction, Context context) {
+    public TransactionsListAdapter(List<Transaction> Transaction, Context context,AdapterInterface clickListener) {
         this.productEntries = Transaction;
         this.context = context;
+        this.clickListener=clickListener;
     }
 
     @Override
@@ -39,14 +41,17 @@ public class TransactionsListAdapter extends RecyclerView.Adapter<TransactionsLi
 
 
     @Override
-    public void onBindViewHolder(TransactionsListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(TransactionsListAdapter.ViewHolder holder, final int position) {
         Transaction Transaction = productEntries.get(position);
         holder.tTitle.setText(Transaction.getTitle());
         holder.tAmount.setText(Transaction.getAmount());
-       /* holder.productBrand.setText(Transaction.getBrand());
-        // holder.productImage.setImageResource(R.drawable.smart);
-        Picasso.with(context).load(Transaction.getPicUrl()).into(holder.productImage);
-   */ }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickListener.itemCLicked(productEntries.get(position));
+            }
+        });
+     }
 
     @Override
     public int getItemCount() {
@@ -61,23 +66,18 @@ public class TransactionsListAdapter extends RecyclerView.Adapter<TransactionsLi
 
         @Override
         public void onClick(View v) {
-           /* Intent intent = new Intent(context, ProductDetailActivity.class);
-            //intent.putExtra("Transaction", (Serializable)productEntries.get(v.getVerticalScrollbarPosition()));
-            intent.putExtra("product_id", productEntries.get(getPosition()).getProdId());
-            intent.putExtra("product_name", productEntries.get(getPosition()).getName());
-            intent.putExtra("image_url", productEntries.get(getPosition()).getPicUrl());
-            context.startActivity(intent);*/
+
         }
 
         public ViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
             tTitle = (TextView) view.findViewById(R.id.title_disp);
-            tAmount = (TextView) view.findViewById(R.id.amount_disp);/*
-            productName = (TextView) view.findViewById(R.id.product_name);
-            productBrand = (TextView) view.findViewById(R.id.product_brand);
-*/
+            tAmount = (TextView) view.findViewById(R.id.amount_disp);
 
         }
+    }
+    public interface AdapterInterface{
+        public void itemCLicked(Transaction item);
     }
 }

@@ -3,23 +3,22 @@ package com.example.tushar.expensemanager.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.tushar.expensemanager.R;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link RemoveTransactionFragment.OnFragmentInteractionListener} interface
+ * {@link ExpenseGraphFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RemoveTransactionFragment#newInstance} factory method to
+ * Use the {@link ExpenseGraphFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RemoveTransactionFragment extends Fragment {
+public class ExpenseGraphFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,7 +30,7 @@ public class RemoveTransactionFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public RemoveTransactionFragment() {
+    public ExpenseGraphFragment() {
         // Required empty public constructor
     }
 
@@ -41,13 +40,14 @@ public class RemoveTransactionFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RemoveTransactionFragment.
+     * @return A new instance of fragment ExpenseGraphFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RemoveTransactionFragment newInstance(String param1) {
-        RemoveTransactionFragment fragment = new RemoveTransactionFragment();
+    public static ExpenseGraphFragment newInstance(String param1, String param2) {
+        ExpenseGraphFragment fragment = new ExpenseGraphFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,6 +57,7 @@ public class RemoveTransactionFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -64,7 +65,7 @@ public class RemoveTransactionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_remove_transaction, container, false);
+        return inflater.inflate(R.layout.fragment_expense_graph, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -91,12 +92,13 @@ public class RemoveTransactionFragment extends Fragment {
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

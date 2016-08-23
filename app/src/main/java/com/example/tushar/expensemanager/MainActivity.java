@@ -1,13 +1,17 @@
 package com.example.tushar.expensemanager;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,15 +23,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.tushar.expensemanager.db.DatabaseManager;
 import com.example.tushar.expensemanager.fragment.AddTransactionFragment;
-import com.example.tushar.expensemanager.fragment.RemoveTransactionFragment;
+import com.example.tushar.expensemanager.fragment.SelectCategoryFragment;
+import com.example.tushar.expensemanager.fragment.TransactionDetailsFragment;
 import com.example.tushar.expensemanager.fragment.TransactionListFragment;
+import com.example.tushar.expensemanager.model.Category;
+import com.example.tushar.expensemanager.model.Tag;
+import com.example.tushar.expensemanager.model.Transaction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener ,AddTransactionFragment.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener ,AddTransactionFragment.OnFragmentInteractionListener,TransactionListFragment.OnFragmentInteractionListener,TransactionDetailsFragment.OnFragmentInteractionListener,SelectCategoryFragment.OnListFragmentInteractionListener{
     private static final String TAG = "Main Activity";
     public   Dialog dialog;
 
@@ -80,20 +93,50 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                loadAddFragment();
+
+               final Fragment fragment= getFragmentManager().findFragmentById(R.id.fragment_container);
+                if(fragment!=null && fragment.getTag().equalsIgnoreCase("CAT_LIST")){
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    // Get the layout inflater
+                    LayoutInflater inflater = getLayoutInflater();
+
+                    // Inflate and set the layout for the dialog
+                    // Pass null as the parent view because its going in the dialog layout
+                    final View view1=inflater.inflate(R.layout.custom_dialog,null);
+                    builder.setView(view1)
+                            // Add action buttons
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                  String name=  ((EditText)view1.findViewById(R.id.add_category_name)).getText().toString();
+                                    if(((SelectCategoryFragment)fragment).getmType().equalsIgnoreCase("category")){
+                                    Category category=new Category();
+                                    category.setCategoryName(name);
+                                    DatabaseManager.getInstance().addCategory(category);}
+                                    else {
+                                        Tag tag=new Tag();
+                                        tag.setTagName(name);
+                                        DatabaseManager.getInstance().addTags(tag);
+                                    }
+                                    ((SelectCategoryFragment)fragment).updateList();
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            }).show();
+
+                }
+                else
+                loadAddFragment(null);
             }
         });
 
 
 
-        RelativeLayout deleteButton=(RelativeLayout)dialog.findViewById(R.id.remove_button);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                loadDeleteFragment();
-            }
-        });
+
             View demodialog =(View) dialog.findViewById(R.id.cross);
             // it call when click on the item whose id is demo1.
             demodialog.setOnClickListener(new View.OnClickListener() {
@@ -110,23 +153,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void loadDeleteFragment() {
-        Log.d(TAG, "mainActivity: adding Transactions");
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        RemoveTransactionFragment fragment = RemoveTransactionFragment.newInstance("Delete");
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
-    }
 
-    private void loadAddFragment() {
+    private void loadAddFragment(Transaction item) {
         Log.d(TAG, "mainActivity: removing Transactions");
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        AddTransactionFragment fragment = AddTransactionFragment.newInstance("Delete",this);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        AddTransactionFragment fragment = AddTransactionFragment.newInstance(this,item);
+        fragmentTransaction.replace(R.id.fragment_container, fragment,"ADD_FRAG");
         fragmentTransaction.commit();
     }
 
@@ -147,7 +180,8 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
+
+     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -194,9 +228,47 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "mainActivity: onplaceselected");
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        TransactionListFragment fragment = TransactionListFragment.newInstance(null,null);
-        fragmentTransaction.addToBackStack(null);
+        TransactionListFragment fragment = TransactionListFragment.newInstance(this);
+        fragmentTransaction.replace(R.id.fragment_container, fragment,"TLIST_FRAG");
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void loadCategoryTagList(String type) {
+        Log.d(TAG, "mainActivity: onplaceselected");
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        SelectCategoryFragment fragment = SelectCategoryFragment.newInstance(1,type,this);
+        fragmentTransaction.addToBackStack("CAT_LIST");
+        fragmentTransaction.replace(R.id.fragment_container, fragment,"CAT_LIST");
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void showTransactionDetailFragment(Transaction item) {
+        Log.d(TAG, "mainActivity: load Tansaction details");
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        TransactionDetailsFragment fragment = TransactionDetailsFragment.newInstance(item,this);
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onDeleted() {
+        Toast.makeText(this,getResources().getString(R.string.deleted_transaction),Toast.LENGTH_SHORT).show();
+     loadTransactionListFragment();
+    }
+
+    @Override
+    public void onEditing(Transaction item) {
+        loadAddFragment(item);
+    }
+
+    @Override
+    public void onCategoryTagsSelected(List<String> selected,String type) {
+        onBackPressed();
+        AddTransactionFragment fr=(AddTransactionFragment)(getFragmentManager().findFragmentByTag("ADD_FRAG"));
+        fr.setTypeAndSelected(type, (ArrayList<String>) selected);
     }
 }

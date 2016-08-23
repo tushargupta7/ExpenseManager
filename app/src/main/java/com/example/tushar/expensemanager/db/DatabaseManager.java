@@ -3,10 +3,14 @@ package com.example.tushar.expensemanager.db;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.tushar.expensemanager.model.Category;
+import com.example.tushar.expensemanager.model.Tag;
 import com.example.tushar.expensemanager.model.Transaction;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,4 +70,84 @@ public class DatabaseManager {
         return list;
     }
 
+    public void deleteTransaction(int id)  {
+        try {
+            getHelper().getTransactionDao().deleteById(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Transaction getTransactionById(int id) {
+        try {
+            return getHelper().getTransactionDao().queryForId(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void addCategory(Category category){
+        try {
+            getHelper().getCategoryDao().createIfNotExists(category);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addTags(Tag tag){
+        try {
+            getHelper().getTagDao().createIfNotExists(tag);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Category getCategoryById(int id){
+        try {
+            return getHelper().getCategoryDao().queryForId(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Tag getTagById(int id){
+        try {
+            return getHelper().getTagDao().queryForId(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<String> getAllCategories(){
+        try {
+            List<String> categoryNames=new ArrayList<String>();
+            GenericRawResults<String[]> result=getHelper().getCategoryDao().queryRaw("SELECT category_name FROM Category");
+            for (String[] cat:result) {
+                String category=cat[0];
+                categoryNames.add(category);
+            }
+            return categoryNames;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<String> getAllTags() {
+        try {
+            List<String> tagNames=new ArrayList<String>();
+            GenericRawResults<String[]> result=getHelper().getTagDao().queryRaw("SELECT tag_name FROM Tag");
+            for (String[] cat:result) {
+                String tag=cat[0];
+                tagNames.add(tag);
+            }
+            return tagNames;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

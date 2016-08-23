@@ -4,13 +4,17 @@ package com.example.tushar.expensemanager.model;
  * Created by tushar on 16/8/16.
  */
 
+import android.os.Parcelable;
+
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
+
 @DatabaseTable
-public class Transaction {
+public class Transaction implements Serializable {
     @DatabaseField(generatedId = true)
     public int id;
 
@@ -27,16 +31,20 @@ public class Transaction {
     private String notes;
 
     @DatabaseField
-    private String repeat_mode;
+    private int repeat_mode;
 
     @DatabaseField
-    private String category;
+    private String categoryId;
 
     @DatabaseField
-    private String tag;
+    private String tagId;
 
     @DatabaseField
     private String t_type;
+
+    public int getId() {
+        return id;
+    }
 
     public String getTitle() {
         return title;
@@ -70,28 +78,28 @@ public class Transaction {
         this.notes = notes;
     }
 
-    public String getRepeat_mode() {
+    public int getRepeat_mode() {
         return repeat_mode;
     }
 
-    public void setRepeat_mode(String repeat_mode) {
+    public void setRepeat_mode(int repeat_mode) {
         this.repeat_mode = repeat_mode;
     }
 
     public String getCategory() {
-        return category;
+        return categoryId;
     }
 
     public void setCategory(String category) {
-        this.category = category;
+        this.categoryId = category;
     }
 
     public String getTag() {
-        return tag;
+        return tagId;
     }
 
     public void setTag(String tag) {
-        this.tag = tag;
+        this.tagId = tag;
     }
 
     public String getT_type() {

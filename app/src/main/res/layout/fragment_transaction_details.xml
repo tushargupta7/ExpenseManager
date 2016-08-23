@@ -12,28 +12,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="20dp">
 
             <RadioGroup
                 android:id="@+id/transaction_type_selector"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="60dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:saveEnabled="false">
 
                 <RadioButton
                     android:id="@+id/radio_expense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="@string/expense" />
+                    android:text="@string/expense"
+                    android:clickable="false"/>
 
                 <RadioButton
                     android:id="@+id/radio_saving"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="onRadioButtonClicked"
-                    android:text="@string/savings" />
+                    android:text="@string/savings"
+                    android:clickable="false"/>
             </RadioGroup>
 
             <EditText
@@ -42,14 +44,14 @@
                 android:id="@+id/transaction_title"
                 android:inputType="text"
                 android:hint="@string/title"
-                android:padding="10dp"/>
+                android:enabled="false"/>
 
-            <!-- <TextView
-                 android:id="@+id/amount_textview"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="10dp"
-                 android:text="@string/amount" />-->
+           <!-- <TextView
+                android:id="@+id/amount_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/amount" />-->
 
             <EditText
                 android:id="@+id/amount_textbox"
@@ -57,8 +59,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/amount_example"
                 android:minHeight="60dp"
-                android:padding="10dp"
-                android:inputType="numberDecimal"/>
+                android:inputType="numberDecimal"
+                android:enabled="false"/>
 
             <!--<TextView
 
@@ -70,33 +72,31 @@
                 android:text="@string/date" />-->
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:orientation="horizontal">
                 <DatePicker
                     android:calendarViewShown="false"
                     android:id="@+id/datePicker"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    />
                 <EditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/setdate_textview"
-                    android:layout_width="0dp"
-                    android:layout_weight="9"
                     android:hint="@string/date_format"
-                    android:padding="20dp"
-                    android:inputType="date"/>
+                    android:inputType="date"
+                    android:enabled="false"/>
                 <ImageButton
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/date_setter_button"
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
                     android:src="@drawable/ic_date_range_black_24dp"
                     android:tint="@android:color/holo_blue_dark"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp" />
+                    android:clickable="false"/>
             </LinearLayout>
 
             <!--<TextView
@@ -109,10 +109,9 @@
                 android:text="@string/time" />-->
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:orientation="horizontal">
                 <TimePicker
                     android:calendarViewShown="false"
                     android:id="@+id/timePicker"
@@ -120,97 +119,106 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone"/>
                 <EditText
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/settime_textview"
-                    android:layout_weight="9"
                     android:hint="@string/time_format"
-                    android:padding="20dp"
-                    android:inputType="time"/>
+                    android:inputType="time"
+                    android:enabled="false"/>
                 <ImageButton
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_marginRight="20dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/time_setter_button"
                     android:src="@drawable/ic_av_timer_black_24dp"
                     android:tint="@android:color/holo_blue_dark"
-                    android:layout_marginLeft="20dp"/>
+                    android:layout_marginLeft="20dp"
+                    android:clickable="false"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Button
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <TextView
                     android:id="@+id/category_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:padding="5dp"
                     android:text="@string/category" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="nothing"
-                    android:id="@+id/catgory_selected"/>
-<!--
+                    android:id="@+id/selected_category_text"/>
+
                 <Spinner
                     android:id="@+id/category_selector"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    />-->
+                    android:entries="@array/category"
+                    android:clickable="false"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Button
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <TextView
                     android:id="@+id/tag_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:padding="5dp"
                     android:text="@string/tag" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="nothing tags"
-                    android:id="@+id/tag_selected"/>
-    <!--            <Spinner
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/selected_tag_text"/>
+
+                <Spinner
                     android:id="@+id/tags_selector"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:entries="@array/tag"/>
--->
+                    android:entries="@array/tag"
+                    android:clickable="false"
+                    android:visibility="gone"/>
+
             </LinearLayout>
 
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:padding="5dp"
                 android:maxEms="50"
                 android:hint="@string/add_note"
-                android:id="@+id/note_textbox"/>
+                android:id="@+id/note_textbox"
+                android:enabled="false"/>
 
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:entries="@array/repeat_modes"
                 android:prompt="@string/repeat"
-                android:id="@+id/repeat_mode_spinner"/>
+                android:id="@+id/repeat_mode_spinner"
+                android:clickable="false"
+                android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/selected_repeat_text"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add Expense"
                 android:layout_gravity="center_horizontal"
-                android:id="@+id/submit_button"/>
+                android:id="@+id/submit_button"
+                android:visibility="gone"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
